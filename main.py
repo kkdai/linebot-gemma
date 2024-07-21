@@ -88,21 +88,33 @@ async def handle_callback(request: Request):
             if event.source.type == "group":
                 # Provide a default value for reply_msg
                 msg = event.message.text
-                reply_msg = TextSendMessage(text=msg)
-                await line_bot_api.reply_message(
-                    event.reply_token,
-                    reply_msg
-                )
+                # using local llm to remove personal information.
+                determine_ret = generate_local_llm_result_from_replicate(f'{need_bot_prompt}, {msg}')
+
+                # check determine_ret if need using LLM.
+                if "YES" in determine_ret:
+                    # Pass to LLM to process original request.
+                    ret = generate_gemini_text_complete(f'{msg}, reply in zh-TW:')
+                    reply_msg = TextSendMessage(text=ret.text)
+                    await line_bot_api.reply_message(
+                        event.reply_token,
+                        reply_msg
+                    )
+                else:
+                    # otherwise, skip it.
+                    continue
+                # pass the result to gemini to generate a complete sentence.
             else:
                 # Provide a default value for reply_msg
                 msg = event.message.text
+                # using local llm to remove personal information.
                 safe_ret = generate_local_llm_result_from_replicate(f'{remove_personal_prompt}, {msg}')
+                # pass the result to gemini to generate a complete sentence.
                 ret = generate_gemini_text_complete(f'{safe_ret}, reply in zh-TW:')
-                safe_reply_msg = TextSendMessage(text=safe_ret)
                 reply_msg = TextSendMessage(text=ret.text)
                 await line_bot_api.reply_message(
                     event.reply_token,
-                    [safe_reply_msg, reply_msg]
+                    reply_msg
                 )
         elif (event.message.type == "image"):
             message_content = await line_bot_api.get_message_content(
