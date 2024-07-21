@@ -1,0 +1,37 @@
+{
+  "name": "linebot receipt helper",
+  "description": "LINEBot with Gemini Pro with Firebase",
+  "repository": "https://github.com/kkdai/linebot-gemini-python",
+  "keywords": [
+    "python",
+    "linebot",
+    "gemini",
+    "firebase"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-python.git"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "env": {
+    "GEMINI_API_KEY": {
+      "description": "GEMINI API KEY",
+      "required": true
+    },
+    "ChannelAccessToken": {
+      "description": "Channel Access Token",
+      "required": true
+    },
+    "ChannelSecret": {
+      "description": "Channel Secret",
+      "required": true
+    },
+    "FIREBASE_URL": {
+      "description": "FIREBASE URL",
+      "required": true
+    }
+  }
+}
