@@ -77,14 +77,24 @@ async def handle_callback(request: Request):
             continue
 
         if (event.message.type == "text"):
-            # Provide a default value for reply_msg
-            msg = event.message.text
-            ret = generate_gemini_text_complete(f'{msg}, reply in zh-TW:')
-            reply_msg = TextSendMessage(text=ret.text)
-            await line_bot_api.reply_message(
-                event.reply_token,
-                reply_msg
-            )
+            # check if in group or not
+            if event.source.type == "group":
+                # Provide a default value for reply_msg
+                msg = event.message.text
+                reply_msg = TextSendMessage(text=msg)
+                await line_bot_api.reply_message(
+                    event.reply_token,
+                    reply_msg
+                )
+            else:
+                # Provide a default value for reply_msg
+                msg = event.message.text
+                ret = generate_gemini_text_complete(f'{msg}, reply in zh-TW:')
+                reply_msg = TextSendMessage(text=ret.text)
+                await line_bot_api.reply_message(
+                    event.reply_token,
+                    reply_msg
+                )
         elif (event.message.type == "image"):
             message_content = await line_bot_api.get_message_content(
                 event.message.id)
