@@ -30,7 +30,14 @@ Describe this image with scientific detail, reply in zh-TW:
 '''
 
 remove_personal_prompt = '''
-"取代掉個人資料，姓名用某人，地址，身份字號，銀行帳號等。 只要給我移除後的文字\n
+Replace personal information, name with someone, address, ID number, bank account, etc. 
+Just give me the modified original text, don't reply to me.
+------\n
+'''
+
+need_bot_prompt = '''
+Check the following text to see if it requires customer service assistance. 
+Just answer YES/NO
 ------\n
 '''
 
@@ -138,19 +145,20 @@ def generate_result_from_image(img, prompt):
 
 def generate_result_from_replicate(prompt):
     output = replicate.run(
-        "lucataco/gemma2-9b-it:24464993111a1b52b2ebcb2a88c76090a705950644dca3a3955ee40d80909f2d",
+        "google-deepmind/gemma-7b-it:2790a695e5dcae15506138cc4718d1106d0d475e6dca4b1d43f42414647993d5",
         input={
             "top_k": 50,
-            "top_p": 0.9,
+            "top_p": 0.95,
             "prompt": prompt,
-            "temperature": 0.27,
+            "temperature": 0.2,
             "max_new_tokens": 512,
-            "repetition_penalty": 1.2
+            "min_new_tokens": -1,
+            "repetition_penalty": 1
         }
     )
 
-    # The lucataco/gemma2-9b-it model can stream output as it's running.
+    # The google-deepmind/gemma-7b-it model can stream output as it's running.
     # The predict method returns an iterator, and you can iterate over that output.
     for item in output:
-        # https://replicate.com/lucataco/gemma2-9b-it/api#output-schema
+        # https://replicate.com/google-deepmind/gemma-7b-it/api#output-schema
         print(item, end="")
