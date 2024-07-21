@@ -96,11 +96,13 @@ async def handle_callback(request: Request):
             else:
                 # Provide a default value for reply_msg
                 msg = event.message.text
-                ret = generate_gemini_text_complete(f'{msg}, reply in zh-TW:')
+                safe_ret = generate_local_llm_result_from_replicate(f'{remove_personal_prompt}, {msg}')
+                ret = generate_gemini_text_complete(f'{safe_ret}, reply in zh-TW:')
+                safe_reply_msg = TextSendMessage(text=safe_ret)
                 reply_msg = TextSendMessage(text=ret.text)
                 await line_bot_api.reply_message(
                     event.reply_token,
-                    reply_msg
+                    [safe_reply_msg, reply_msg]
                 )
         elif (event.message.type == "image"):
             message_content = await line_bot_api.get_message_content(
@@ -143,7 +145,7 @@ def generate_result_from_image(img, prompt):
     return response
 
 
-def generate_result_from_replicate(prompt):
+def generate_local_llm_result_from_replicate(prompt):
     output = replicate.run(
         "google-deepmind/gemma-7b-it:2790a695e5dcae15506138cc4718d1106d0d475e6dca4b1d43f42414647993d5",
         input={
@@ -159,6 +161,11 @@ def generate_result_from_replicate(prompt):
 
     # The google-deepmind/gemma-7b-it model can stream output as it's running.
     # The predict method returns an iterator, and you can iterate over that output.
+    ret_string = ""
     for item in output:
         # https://replicate.com/google-deepmind/gemma-7b-it/api#output-schema
         print(item, end="")
+        ret_string += item
+    
+    # contact all out put into one string
+    return ret_string
