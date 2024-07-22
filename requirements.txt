@@ -3,4 +3,5 @@ fastapi
 uvicorn[standard]
 google.generativeai
 pydantic
-# replicate
+tiktoken
+Pillow

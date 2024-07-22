@@ -16,7 +16,7 @@ from io import BytesIO
 
 import aiohttp
 import PIL.Image
-import replicate
+#import replicate
 
 
 # get channel_secret and channel_access_token from your environment variable
