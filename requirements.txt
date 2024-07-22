@@ -3,4 +3,4 @@ fastapi
 uvicorn[standard]
 google.generativeai
 pydantic
-replicate
+# replicate

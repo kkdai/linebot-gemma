@@ -158,26 +158,27 @@ def generate_result_from_image(img, prompt):
 
 
 def generate_local_llm_result_from_replicate(prompt):
-    output = replicate.run(
-        "google-deepmind/gemma-7b-it:2790a695e5dcae15506138cc4718d1106d0d475e6dca4b1d43f42414647993d5",
-        input={
-            "top_k": 50,
-            "top_p": 0.95,
-            "prompt": prompt,
-            "temperature": 0.2,
-            "max_new_tokens": 512,
-            "min_new_tokens": -1,
-            "repetition_penalty": 1
-        }
-    )
+    return prompt
+    # output = replicate.run(
+    #     "google-deepmind/gemma-7b-it:2790a695e5dcae15506138cc4718d1106d0d475e6dca4b1d43f42414647993d5",
+    #     input={
+    #         "top_k": 50,
+    #         "top_p": 0.95,
+    #         "prompt": prompt,
+    #         "temperature": 0.2,
+    #         "max_new_tokens": 512,
+    #         "min_new_tokens": -1,
+    #         "repetition_penalty": 1
+    #     }
+    # )
 
-    # The google-deepmind/gemma-7b-it model can stream output as it's running.
-    # The predict method returns an iterator, and you can iterate over that output.
-    ret_string = ""
-    for item in output:
-        # https://replicate.com/google-deepmind/gemma-7b-it/api#output-schema
-        print(item, end="")
-        ret_string += item
+    # # The google-deepmind/gemma-7b-it model can stream output as it's running.
+    # # The predict method returns an iterator, and you can iterate over that output.
+    # ret_string = ""
+    # for item in output:
+    #     # https://replicate.com/google-deepmind/gemma-7b-it/api#output-schema
+    #     print(item, end="")
+    #     ret_string += item
     
-    # contact all out put into one string
-    return ret_string
+    # # contact all out put into one string
+    # return ret_string
