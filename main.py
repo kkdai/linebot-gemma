@@ -89,7 +89,7 @@ async def handle_callback(request: Request):
                 # Provide a default value for reply_msg
                 msg = event.message.text
                 # using local llm to remove personal information.
-                determine_ret = generate_local_llm_result_from_replicate(f'{need_bot_prompt}, {msg}')
+                determine_ret = generate_local_llm_result(f'{need_bot_prompt}, {msg}')
 
                 # check determine_ret if need using LLM.
                 if "YES" in determine_ret:
@@ -108,7 +108,7 @@ async def handle_callback(request: Request):
                 # Provide a default value for reply_msg
                 msg = event.message.text
                 # using local llm to remove personal information.
-                safe_ret = generate_local_llm_result_from_replicate(f'{remove_personal_prompt}, {msg}')
+                safe_ret = generate_local_llm_result(f'{remove_personal_prompt}, {msg}')
                 # pass the result to gemini to generate a complete sentence.
                 ret = generate_gemini_text_complete(f'{safe_ret}, reply in zh-TW:')
                 reply_msg = TextSendMessage(text=ret.text)
@@ -157,7 +157,7 @@ def generate_result_from_image(img, prompt):
     return response
 
 
-def generate_local_llm_result_from_replicate(prompt):
+def generate_local_llm_result(prompt):
     return prompt
     # output = replicate.run(
     #     "google-deepmind/gemma-7b-it:2790a695e5dcae15506138cc4718d1106d0d475e6dca4b1d43f42414647993d5",
