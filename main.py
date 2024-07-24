@@ -92,8 +92,8 @@ async def handle_callback(request: Request):
                 # using local llm to remove personal information.
                 determine_ret = generate_local_llm_result(f'{need_bot_prompt}, {msg}')
 
-                # check determine_ret if need using LLM.
-                if "YES" in determine_ret:
+                #c heck if determine_ret contains YES (case insensitive)
+                if "yes" in determine_ret.lower():
                     # Pass to LLM to process original request.
                     ret = generate_gemini_text_complete(f'{msg}, reply in zh-TW:')
                     reply_msg = TextSendMessage(text=ret.text)
@@ -112,11 +112,11 @@ async def handle_callback(request: Request):
                 safe_ret = generate_local_llm_result(f'{remove_personal_prompt}, {msg}')
                 # pass the result to gemini to generate a complete sentence.
                 ret = generate_gemini_text_complete(f'{safe_ret}, reply in zh-TW:')
-                reply_msg = TextSendMessage(text=f'原有訊息: {msg}, 修正後安全訊息： {ret.text}')
-                reply_msg = TextSendMessage(text=f'回覆訊息： {ret.text}')
+                ori_reply_msg = TextSendMessage(text=f'原有訊息: {msg}, 修正後安全訊息： {ret.text}')
+                safe_reply_msg = TextSendMessage(text=f'回覆訊息： {ret.text}')
                 await line_bot_api.reply_message(
                     event.reply_token,
-                    reply_msg
+                    [ori_reply_msg, safe_reply_msg]
                 )
         elif (event.message.type == "image"):
             message_content = await line_bot_api.get_message_content(
