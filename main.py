@@ -13,7 +13,7 @@ import google.generativeai as genai
 import os
 import sys
 from io import BytesIO
-
+from groq import Groq
 import aiohttp
 import PIL.Image
 #import replicate
@@ -23,7 +23,7 @@ import PIL.Image
 channel_secret = os.getenv('ChannelSecret', None)
 channel_access_token = os.getenv('ChannelAccessToken', None)
 gemini_key = os.getenv('GEMINI_API_KEY')
-replicate_token = os.getenv('REPLICATE_API_TOKEN')
+groq_token = os.getenv('GROQ_API_KEY')
 
 imgage_prompt = '''
 Describe this image with scientific detail, reply in zh-TW:
@@ -36,7 +36,8 @@ Just give me the modified original text, don't reply to me.
 '''
 
 need_bot_prompt = '''
-Check the following text to see if it requires customer service assistance. 
+Check the following text to see 
+if it requires customer service assistance. 
 Just answer YES/NO
 ------\n
 '''
@@ -51,7 +52,7 @@ if channel_access_token is None:
 if gemini_key is None:
     print('Specify GEMINI_API_KEY as environment variable.')
     sys.exit(1)
-if replicate_token is None:
+if groq_token is None:
     print('Specify REPLICATE_API_TOKEN as environment variable.')
     sys.exit(1)
 
@@ -158,27 +159,19 @@ def generate_result_from_image(img, prompt):
 
 
 def generate_local_llm_result(prompt):
-    return prompt
-    # output = replicate.run(
-    #     "google-deepmind/gemma-7b-it:2790a695e5dcae15506138cc4718d1106d0d475e6dca4b1d43f42414647993d5",
-    #     input={
-    #         "top_k": 50,
-    #         "top_p": 0.95,
-    #         "prompt": prompt,
-    #         "temperature": 0.2,
-    #         "max_new_tokens": 512,
-    #         "min_new_tokens": -1,
-    #         "repetition_penalty": 1
-    #     }
-    # )
+    client = Groq(
+        api_key=os.environ.get("GROQ_API_KEY"),
+    )
 
-    # # The google-deepmind/gemma-7b-it model can stream output as it's running.
-    # # The predict method returns an iterator, and you can iterate over that output.
-    # ret_string = ""
-    # for item in output:
-    #     # https://replicate.com/google-deepmind/gemma-7b-it/api#output-schema
-    #     print(item, end="")
-    #     ret_string += item
-    
-    # # contact all out put into one string
-    # return ret_string
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+        model=" gemma2-9b-it",
+    )
+
+    print(chat_completion.choices[0].message.content)
+    return chat_completion.choices[0].message.content
