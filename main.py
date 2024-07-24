@@ -171,7 +171,7 @@ def generate_local_llm_result(prompt):
                 "content": prompt,
             }
         ],
-        model=" gemma2-9b-it",
+        model="gemma2-9b-it",
     )
 
     print(chat_completion.choices[0].message.content)
