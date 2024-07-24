@@ -112,7 +112,8 @@ async def handle_callback(request: Request):
                 safe_ret = generate_local_llm_result(f'{remove_personal_prompt}, {msg}')
                 # pass the result to gemini to generate a complete sentence.
                 ret = generate_gemini_text_complete(f'{safe_ret}, reply in zh-TW:')
-                reply_msg = TextSendMessage(text=ret.text)
+                reply_msg = TextSendMessage(text=f'原有訊息: {msg}, 修正後安全訊息： {ret.text}')
+                reply_msg = TextSendMessage(text=f'回覆訊息： {ret.text}')
                 await line_bot_api.reply_message(
                     event.reply_token,
                     reply_msg
