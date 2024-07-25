@@ -1,45 +1,87 @@
-# Gemini Helper
+# LINE Bot Demo for Personal Data Hider and LLM Detector
 
-## Project Background
-
-## Screenshot
-
-![image](https://github.com/kkdai/linebot-gemini-python/assets/2252691/466fbe7c-e704-45f9-8584-91cfa2c99e48)
-
+This project provides a FastAPI application that integrates with LINE Bot to hide personal data and detect if customer service assistance is needed using LLM (Large Language Models). The application leverages the Gemini Pro API and Groq for generative AI capabilities.
 
 ## Features
 
-## Technologies Used
+- **Personal Data Hiding**: Automatically removes personal information such as names, addresses, ID numbers, and bank accounts from messages.
+- **LLM Assistance Detection**: Detects if a message requires customer service assistance and processes it accordingly.
+- **Image Description**: Describes images with scientific detail in Traditional Chinese (zh-TW).
 
-- Python 3
-- FastAPI
-- LINE Messaging API
-- Google Generative AI
-- Aiohttp
-- PIL (Python Imaging Library)
+## Environment Variables
 
-## Setup
+Ensure the following environment variables are set:
 
-1. Clone the repository to your local machine.
-2. Set the following environment variables:
-   - `ChannelSecret`: Your LINE channel secret.
-   - `ChannelAccessToken`: Your LINE channel access token.
-   - `GEMINI_API_KEY`: Your Gemini API key for AI processing.
-3. Install the required dependencies by running `pip install -r requirements.txt`.
-4. Start the FastAPI server with `uvicorn main:app --reload`.
+- `ChannelSecret`: Your LINE Bot channel secret.
+- `ChannelAccessToken`: Your LINE Bot channel access token.
+- `GEMINI_API_KEY`: Your Gemini Pro API key.
+- `GROQ_API_KEY`: Your Groq API key.
+
+## Installation
+
+1. Clone the repository:
+
+    ```sh
+    git clone https://github.com/yourusername/your-repo.git
+    cd your-repo
+    ```
+
+2. Install the required dependencies:
+
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+3. Set the environment variables:
+
+    ```sh
+    export ChannelSecret='your_channel_secret'
+    export ChannelAccessToken='your_channel_access_token'
+    export GEMINI_API_KEY='your_gemini_api_key'
+    export GROQ_API_KEY='your_groq_api_key'
+    ```
 
 ## Usage
 
-To use the Receipt Helper, send a picture of your receipt to the LINE bot. The bot will process the image, extract the data, and provide a JSON representation of the receipt. For text-based commands or queries, simply send the command or query as a message to the bot.
+Run the FastAPI application:
 
-## Commands
+```sh
+uvicorn main:app --reload
 
-- `!清空`: Clears all the scanned receipt history for the user.
+```
+
+## Code Overview
+
+### Main Functionality
+
+- **Message Handling**: The application listens for incoming messages from LINE Bot and processes them based on their type (text or image).
+- **Personal Data Removal**: Uses a local LLM to remove personal information from text messages.
+- **LLM Assistance Detection**: Determines if a message requires customer service assistance and processes it using the Gemini Pro API.
+- **Image Description**: Describes images using the Gemini Pro API.
+
+### Key Functions
+
+- `generate_gemini_text_complete(prompt)`: Generates a text completion using the Gemini Pro API.
+- `generate_result_from_image(img, prompt)`: Generates a description for an image using the Gemini Pro API.
+- `generate_local_llm_result(prompt)`: Generates a result using a local LLM (Groq).
+
+## Example
+
+Here is an example of how the application processes a text message:
+
+1. A user sends a message containing personal information.
+2. The application uses the local LLM to remove personal information.
+3. The modified message is then processed by the Gemini Pro API to generate a complete response in Traditional Chinese (zh-TW).
+4. The original and modified messages are sent back to the user.
 
 ## Contributing
 
-If you'd like to contribute to this project, please feel free to submit a pull request.
+Feel free to submit issues or pull requests if you have any improvements or bug fixes.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
+
+```
+
+This `README.md` provides an overview of the project, its features, installation instructions, usage, and a brief explanation of the code. Adjust the repository URL and other details as necessary.
