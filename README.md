@@ -2,6 +2,14 @@
 
 This project provides a FastAPI application that integrates with LINE Bot to hide personal data and detect if customer service assistance is needed using LLM (Large Language Models). The application leverages the Gemini Pro API and Groq for generative AI capabilities.
 
+
+
+## Demo Image
+
+![](./img/asistant_detection.jpg)
+
+![](./img/personal_info_hider.jpg)
+
 ## Features
 
 - **Personal Data Hiding**: Automatically removes personal information such as names, addresses, ID numbers, and bank accounts from messages.
